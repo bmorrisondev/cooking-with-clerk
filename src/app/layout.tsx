@@ -21,7 +21,11 @@ export default function RootLayout({
       <html lang="en">
         <body className={inter.className}>
           <Nav />
-          {children}
+          <div className="flex justify-center md:mx-0 m-2">
+            <div className="flex flex-col w-full max-w-[960px] px-2">
+              {children}
+            </div>
+          </div>
         </body>
       </html>
     </ClerkProvider>
