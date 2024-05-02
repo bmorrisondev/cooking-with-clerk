@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import Nav from "@/components/Nav";
+import { PHProvider } from "./providers";
+import PostHogPageView from "./PostHogPageView";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,14 +21,17 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={inter.className}>
-          <Nav />
-          <div className="flex justify-center md:mx-0 m-2">
-            <div className="flex flex-col w-full max-w-[960px] px-2">
-              {children}
+        <PHProvider>
+          <body className={inter.className}>
+            <PostHogPageView />
+            <Nav />
+            <div className="flex justify-center md:mx-0 m-2">
+              <div className="flex flex-col w-full max-w-[960px] px-2">
+                {children}
+              </div>
             </div>
-          </div>
-        </body>
+          </body>
+        </PHProvider>
       </html>
     </ClerkProvider>
   );
