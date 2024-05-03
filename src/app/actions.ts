@@ -2,6 +2,8 @@
 
 import { ChatOpenAI } from "@langchain/openai";
 
+export const runtime = 'edge'
+
 const chatModel = new ChatOpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
