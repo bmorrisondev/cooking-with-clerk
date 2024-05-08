@@ -1,8 +1,7 @@
 'use client'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { FormEvent, useState } from "react";
-import { generateRecipes } from "../actions";
+import { useState } from "react";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import {
   Card,
