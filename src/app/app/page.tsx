@@ -12,16 +12,12 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { useChat } from "ai/react";
-import { useRouter } from "next/navigation";
+import { Ingredient, Recipe } from "@/models/recipes";
 
 export default function Home() {
-  const router = useRouter();
+  const [recipes, setRecipes] = useState<Recipe[]>([])
 
-  const [prompt, setPrompt] = useState<string>("");
-  // const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [recipes, setRecipes] = useState<any[]>([])
-
-  const { messages, input, isLoading, error, handleInputChange, handleSubmit, setInput, data } = useChat({
+  const { input, isLoading, handleInputChange, handleSubmit } = useChat({
     api: "/api/generate",
     onResponse: async (res) => {
       let json = await res.json()
@@ -33,70 +29,44 @@ export default function Home() {
     }
   });
 
-  async function generateIdeas(e: FormEvent<HTMLFormElement>) {
-    // const userMessage = {
-    //   role: "user",
-    //   content: input,
-    // };
-
-    handleSubmit(e);
-  }
-
-  // async function generateIdeas() {
-  //   setIsLoading(true)
-  //   // let r = await generateRecipes(prompt);
-
-  //   let res = await fetch("/api/generate", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({ input: prompt }),
-  //   })
-
-  //   console.log(r)
-  //   // setRecipes(r)
-  //   setIsLoading(false)
-  // }
-
   return (
     <main>
-      <div className="flex items-center gap-2 mb-4">
-        <form onSubmit={handleSubmit}>
-          <Input type="text" placeholder="Specify some themes or ingredients"
-            value={input} onChange={handleInputChange}/>
-          <Button type="submit">Generate ideas!</Button>
-        </form>
-      </div>
+      <form onSubmit={handleSubmit} className="flex items-center gap-2 mb-4">
+        <Input type="text" placeholder="Specify some themes or ingredients"
+          value={input} onChange={handleInputChange}/>
+        <Button type="submit">Generate ideas!</Button>
+      </form>
       {isLoading && <LoadingSpinner />}
-      <div className="grid md:grid-cols-3 gap-4">
-        {recipes.length > 0 && recipes.map((recipe, i) => (
-          <Card className="flex flex-col flex-1">
-            <CardHeader>
-              <CardTitle>{recipe.name}</CardTitle>
-              <CardDescription>{recipe.description}</CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col flex-1">
-              <div className="flex flex-col flex-1 mb-2">
-                <div>Ingredients:</div>
-                <div className="bg-slate-100 border border-slate-200 shadow-sm rounded mb-2">
-                  <ul className="text-sm list-disc ml-4 p-2">
-                    {recipe.ingredients.map((ingredient: any, i: number) => (
-                      <li key={i}>{ingredient.name} ({ingredient.amount})</li>
+      {!isLoading && (
+        <div className="grid md:grid-cols-3 gap-4">
+          {recipes.length > 0 && recipes.map((recipe: Recipe, i) => (
+            <Card className="flex flex-col flex-1">
+              <CardHeader>
+                <CardTitle>{recipe.name}</CardTitle>
+                <CardDescription>{recipe.description}</CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col flex-1">
+                <div className="flex flex-col flex-1 mb-2">
+                  <div>Ingredients:</div>
+                  <div className="bg-slate-100 border border-slate-200 shadow-sm rounded mb-2">
+                    <ul className="text-sm list-disc ml-4 p-2">
+                      {recipe.ingredients.map((ingredient: Ingredient, i: number) => (
+                        <li key={i}>{ingredient.name} ({ingredient.amount})</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <ol className="list-decimal ml-4">
+                    {recipe.instructions.map((step: string, i: number) => (
+                      <li key={i}>{step}</li>
                     ))}
-                  </ul>
+                  </ol>
                 </div>
-                <ol className="list-decimal ml-4">
-                  {recipe.instructions.map((step: string, i: number) => (
-                    <li key={i}>{step}</li>
-                  ))}
-                </ol>
-              </div>
-              <Button onClick={() => alert("You clicked the button!")}>Save</Button>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                <Button onClick={() => alert("You clicked the button!")}>Save</Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
     </main>
   );
 }
