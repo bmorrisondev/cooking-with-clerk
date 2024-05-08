@@ -56,6 +56,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
   const data = new StreamData();
   let fullObj: any = {}
+  const encoder = new TextEncoder();
   const stream = new ReadableStream({
     async start(controller) {
       for await (const obj of response.partialObjectStream) {
@@ -63,7 +64,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         // controller.enqueue(JSON.stringify(obj))
         // data.append({ test: 'value' });
       }
-      controller.enqueue(JSON.stringify(fullObj))
+      controller.enqueue(encoder.encode(JSON.stringify(fullObj)))
       controller.close();
       data.close();
     }
