@@ -60,7 +60,7 @@ export default function Home() {
                     ))}
                   </ol>
                 </div>
-                <Button onClick={() => alert("You clicked the button!")}>Save</Button>
+                {/* <Button onClick={() => alert("You clicked the button!")}>Save</Button> */}
               </CardContent>
             </Card>
           ))}
