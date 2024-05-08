@@ -12,7 +12,6 @@ type UserMetadata = {
 
 function isBetaUser(auth: ClerkMiddlewareAuth): boolean {
   const { sessionClaims } = auth()
-  console.log(sessionClaims)
   if(sessionClaims?.metadata) {
     const { betauser } = sessionClaims.metadata as UserMetadata
     if(betauser === 'true') {

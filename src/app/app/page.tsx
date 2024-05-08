@@ -1,7 +1,7 @@
 'use client'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { generateRecipes } from "../actions";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import {
@@ -11,25 +11,62 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { useChat } from "ai/react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+
   const [prompt, setPrompt] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+  // const [isLoading, setIsLoading] = useState<boolean>(false)
   const [recipes, setRecipes] = useState<any[]>([])
 
-  async function generateIdeas() {
-    setIsLoading(true)
-    let r = await generateRecipes(prompt);
-    setRecipes(r)
-    setIsLoading(false)
+  const { messages, input, isLoading, error, handleInputChange, handleSubmit, setInput, data } = useChat({
+    api: "/api/generate",
+    onResponse: async (res) => {
+      let json = await res.json()
+      if(json.recipes) {
+        setRecipes(json.recipes)
+      } else {
+        setRecipes(json)
+      }
+    }
+  });
+
+  async function generateIdeas(e: FormEvent<HTMLFormElement>) {
+    // const userMessage = {
+    //   role: "user",
+    //   content: input,
+    // };
+
+    handleSubmit(e);
   }
+
+  // async function generateIdeas() {
+  //   setIsLoading(true)
+  //   // let r = await generateRecipes(prompt);
+
+  //   let res = await fetch("/api/generate", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({ input: prompt }),
+  //   })
+
+  //   console.log(r)
+  //   // setRecipes(r)
+  //   setIsLoading(false)
+  // }
 
   return (
     <main>
       <div className="flex items-center gap-2 mb-4">
-        <Input type="text" placeholder="Specify some themes or ingredients"
-          value={prompt} onChange={e => setPrompt(e.target.value)}/>
-        <Button type="submit" onClick={generateIdeas}>Generate ideas!</Button>
+        <form onSubmit={handleSubmit}>
+          <Input type="text" placeholder="Specify some themes or ingredients"
+            value={input} onChange={handleInputChange}/>
+          <Button type="submit">Generate ideas!</Button>
+        </form>
       </div>
       {isLoading && <LoadingSpinner />}
       <div className="grid md:grid-cols-3 gap-4">
@@ -44,8 +81,8 @@ export default function Home() {
                 <div>Ingredients:</div>
                 <div className="bg-slate-100 border border-slate-200 shadow-sm rounded mb-2">
                   <ul className="text-sm list-disc ml-4 p-2">
-                    {recipe.ingredients.map((ingredient: string, i: number) => (
-                      <li key={i}>{ingredient}</li>
+                    {recipe.ingredients.map((ingredient: any, i: number) => (
+                      <li key={i}>{ingredient.name} ({ingredient.amount})</li>
                     ))}
                   </ul>
                 </div>
