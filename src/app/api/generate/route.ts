@@ -11,9 +11,7 @@ import { Stream } from "stream";
 
 export const dynamic = 'force-dynamic';
 
-export const config = {
-  runtime: "edge"
-}
+export const runtime = "edge"
 
 const recipeSchema = z.array(z.object({
   name: z.string(),
