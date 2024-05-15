@@ -3,18 +3,19 @@ import { NextResponse } from "next/server";
 
 const isProtectedRoute = createRouteMatcher([
   '/app(.*)',
-  '/admin(.*)'
+  '/admin(.*)',
+  '/api(.*)'
 ]);
 
 type UserMetadata = {
-  betauser: string
+  isBetaUser?: boolean
 }
 
 function isBetaUser(auth: ClerkMiddlewareAuth): boolean {
   const { sessionClaims } = auth()
   if(sessionClaims?.metadata) {
-    const { betauser } = sessionClaims.metadata as UserMetadata
-    if(betauser === 'true') {
+    const { isBetaUser } = sessionClaims.metadata as UserMetadata
+    if(isBetaUser) {
       return true
     }
   }
