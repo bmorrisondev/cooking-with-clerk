@@ -42,7 +42,7 @@ npm install
 
 > If you do not have a Clerk account, you can [create one for free](https://dashboard.clerk.com/sign-up).
 
-In the Clerk dashboard, create a new application and configure your preferred login methods as directed in the docs. Once you've created the application, create a `.env.local` file at the root of the repository and paste in the environment variables shown in the onboarding guide. The two environment variables are:
+In the Clerk dashboard, create a new application and configure your preferred login methods as [directed in the docs](https://clerk.com/docs/quickstarts/setup-clerk). Once you've created the application, create a `.env.local` file at the root of the repository and paste in the environment variables shown in the onboarding guide. The two environment variables are:
 
 - `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
 - `CLERK_SECRET_KEY`
@@ -92,4 +92,4 @@ If I do not respond in a timely manner, feel free to ping or DM me on X: [@brian
 
 If you have any feedback, please reach out to me on X: [@brianmmdev](https://x.com/brianmmdev)
 
-To report issues or suggest improvements, feel free to create an issue.
+To report issues or suggest improvements, feel free to create an issue.~
