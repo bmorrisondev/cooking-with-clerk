@@ -9,23 +9,26 @@ const isProtectedRoute = createRouteMatcher([
 
 type UserMetadata = {
   isBetaUser?: boolean
-}
-
-function isBetaUser(auth: ClerkMiddlewareAuth): boolean {
-  const { sessionClaims } = auth()
-  if(sessionClaims?.metadata) {
-    const { isBetaUser } = sessionClaims.metadata as UserMetadata
-    if(isBetaUser) {
-      return true
-    }
-  }
-  return false
+  isAdmin?: boolean
 }
 
 export default clerkMiddleware((auth, req) => {
   if (isProtectedRoute(req)) {
     auth().protect()
-    if(!isBetaUser(auth)) {
+
+    // 👉 Use `auth()` to get the sessionClaims, which includes the public metadata
+    const { sessionClaims } = auth()
+    const { isAdmin, isBetaUser } = sessionClaims?.metadata as UserMetadata
+    if(isAdmin) {
+      // 👉 If the user is an admin, let them proceed to anything
+      return
+    }
+    if(!isAdmin && req.nextUrl.pathname.startsWith('/admin')) {
+      // 👉 If the user is not an admin and they try to access the admin panel, return an error
+      return NextResponse.error()
+    }
+    if(!isBetaUser) {
+      // 👉 If the user is not an admin and not a beta user, redirect them to the waitlist
       return NextResponse.redirect(new URL('/waitlist', req.url))
     }
   }

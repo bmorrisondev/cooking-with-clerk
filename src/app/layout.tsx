@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Alegreya } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import Nav from "@/components/Nav";
 import { PHProvider } from "./providers";
 import PostHogPageView from "./PostHogPageView";
 
-const inter = Inter({ subsets: ["latin"] });
+const alegreya = Alegreya({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Cooking with Clerk",
@@ -22,7 +23,7 @@ export default function RootLayout({
     <ClerkProvider signInFallbackRedirectUrl="/app" signUpFallbackRedirectUrl="/app">
       <html lang="en">
         <PHProvider>
-          <body className={inter.className}>
+          <body className={alegreya.className}>
             <PostHogPageView />
             <Nav />
             <div className="flex justify-center md:mx-0 m-2">

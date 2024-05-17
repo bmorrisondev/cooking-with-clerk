@@ -47,7 +47,7 @@ export default function Home() {
               <CardContent className="flex flex-col flex-1">
                 <div className="flex flex-col flex-1 mb-2">
                   <div>Ingredients:</div>
-                  <div className="bg-slate-100 border border-slate-200 shadow-sm rounded mb-2">
+                  <div className="border shadow-sm rounded mb-2">
                     <ul className="text-sm list-disc ml-4 p-2">
                       {recipe.ingredients.map((ingredient: Ingredient, i: number) => (
                         <li key={i}>{ingredient.name} ({ingredient.amount})</li>

@@ -5,9 +5,11 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import clark from "@/assets/clark.png"
 import { useUser } from '@clerk/nextjs'
+import { usePathname } from 'next/navigation'
 
 function Nav() {
-  const { user} = useUser()
+  const pathname = usePathname()
+  const { user } = useUser()
   const [isAdmin, setIsAdmin] = useState(false)
   const [isBetaUser, setIsBetaUser] = useState(false)
 
@@ -23,15 +25,17 @@ function Nav() {
     <div className='flex justify-between items-center p-2'>
       {/* Nav left */}
       <div>
-        <Link href="/" className="flex items-center gap-2">
-          <Image src={clark} alt="Clark the cook" height={50} width={50} />
-          Cooking with Clerk
-        </Link>
+        {pathname !== "/" && (
+          <Link href="/" className="flex items-center gap-3 font-bold text-2xl">
+            <Image src={clark} alt="Clark the cook" height={50} width={50} />
+            Cooking with Clerk
+          </Link>
+        )}
       </div>
       <div className="flex gap-3">
         <SignedIn>
           { isAdmin && <Link href="/admin">Admin</Link>}
-          { isBetaUser && <Link href="/app">App</Link>}
+          { (isBetaUser || isAdmin) && <Link href="/app">App</Link>}
           <UserButton />
         </SignedIn>
         <SignedOut>
