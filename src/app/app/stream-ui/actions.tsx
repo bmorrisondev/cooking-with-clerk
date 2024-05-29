@@ -1,7 +1,7 @@
 "use server";
-import { recipesSchema } from "@/models/recipes";
+import { PartialRecipes, recipesSchema } from "@/models/recipes";
 import { openai } from "@ai-sdk/openai";
-import { generateObject } from "ai";
+import { generateObject, streamObject } from "ai";
 import { streamUI } from "ai/rsc";
 import { Recipes } from "./_components/recipes";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -19,14 +19,19 @@ export async function generateRecipes(input: string) {
         parameters: z.object({ ingredients: z.array(z.string()) }),
         generate: async function* ({ ingredients }) {
           yield <LoadingSpinner />;
+          let rec: PartialRecipes = {};
 
-          const recipesGeneration = await generateObject({
+          const recipesGeneration = await streamObject({
             schema: recipesSchema,
             prompt: `Generate recipes with the following ingredients or themes: ${ingredients.join(", ")}`,
             model: openai("gpt-3.5-turbo"),
           });
+          for await (const partialRecipes of recipesGeneration.partialObjectStream) {
+            rec = partialRecipes;
+            yield <Recipes recipes={partialRecipes} />;
+          }
 
-          return <Recipes recipes={recipesGeneration.object} />;
+          return <Recipes recipes={rec} />;
         },
       },
     },
