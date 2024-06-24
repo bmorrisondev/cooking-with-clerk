@@ -36,6 +36,7 @@ function Nav() {
         <SignedIn>
           { isAdmin && <Link href="/admin">Admin</Link>}
           { (isBetaUser || isAdmin) && <Link href="/app">App</Link>}
+          { (isBetaUser || isAdmin) && <Link href="/app/me">Me</Link>}
           <UserButton />
         </SignedIn>
         <SignedOut>
