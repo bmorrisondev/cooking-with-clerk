@@ -15,7 +15,7 @@ export async function generateRecipes(input: string) {
     tools: {
       generateRecipes: {
         description:
-          "Generate recipes based on the ingredients or theme the user gives you.",
+          "Generate three recipes based on the ingredients or theme the user gives you.",
         parameters: z.object({ ingredients: z.array(z.string()) }),
         generate: async function* ({ ingredients }) {
           yield <LoadingSpinner />;

@@ -14,7 +14,7 @@ export async function generateRecipes(input: string) {
     const result = await streamObject({
       model: openai("gpt-3.5-turbo"),
       schema: recipesSchema,
-      prompt: `Generate recipes with the following ingredients or themes: ${input}`,
+      prompt: `Generate three recipes with the following ingredients or themes: ${input}`,
     });
     for await (const partialRecipes of result.partialObjectStream) {
       recipesStream.update(<Recipes recipes={partialRecipes} />);

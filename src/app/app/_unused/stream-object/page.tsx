@@ -19,18 +19,20 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState<string>("");
 
+  async function onSubmit(e: any) {
+    e.preventDefault();
+    setIsLoading(true);
+    const { recipes: stream } = await generateRecipes(input);
+    for await (const partialRecipes of readStreamableValue(stream)) {
+      setIsLoading(false);
+      setRecipes(partialRecipes);
+    }
+  }
+
   return (
     <main>
       <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          setIsLoading(true);
-          const { recipes: stream } = await generateRecipes(input);
-          for await (const partialRecipes of readStreamableValue(stream)) {
-            setIsLoading(false);
-            setRecipes(partialRecipes);
-          }
-        }}
+        onSubmit={onSubmit}
         className="flex items-center gap-2 mb-4"
       >
         <Input
