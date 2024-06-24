@@ -1,31 +1,24 @@
-import { ClerkMiddlewareAuth, clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 const isProtectedRoute = createRouteMatcher([
   '/app(.*)',
   '/api(.*)',
-  '/admin(.*)',
 ]);
 
 type UserMetadata = {
   isBetaUser?: boolean
-  isAdmin?: boolean
 }
 
 export default clerkMiddleware((auth, req) => {
   if (isProtectedRoute(req)) {
     auth().protect()
 
+    // 👉 Parse the session claims and check to see if `isBetaUser` is true
     const { sessionClaims } = auth()
-    const { isAdmin, isBetaUser } = sessionClaims?.metadata as UserMetadata
-        if(isAdmin) {
-      // 👉 If the user is an admin, let them proceed to anything
-      return
-    }
-    if(!isAdmin && req.nextUrl.pathname.startsWith('/admin')) {
-      // 👉 If the user is not an admin and they try to access the admin panel, return an error
-      return NextResponse.error()
-    }
+    const { isBetaUser } = sessionClaims?.metadata as UserMetadata
+
+    // 👉 If not, redirect the user to /waitlist
     if(!isBetaUser) {
       return NextResponse.redirect(new URL('/waitlist', req.url))
     }
