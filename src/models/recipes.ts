@@ -17,7 +17,7 @@ export const recipeRequestSchema = z.object({
   instructions: z.array(z.string()),
 });
 export const recipesRequestSchema = z.object({
-  recipes: z.array(recipeRequestSchema).length(3),
+  recipes: z.array(recipeRequestSchema),
 });
 export type RecipeRequest = z.infer<typeof recipeRequestSchema>;
 export type PartialRecipes = DeepPartial<z.infer<typeof recipesRequestSchema>>;

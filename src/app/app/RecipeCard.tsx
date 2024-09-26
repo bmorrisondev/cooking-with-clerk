@@ -11,7 +11,7 @@ import { Recipe } from '@/models/recipes';
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
 import { saveRecipe } from './actions';
-import { auth } from '@clerk/nextjs/server';
+import { toast } from 'sonner';
 
 type Props = {
   recipe: Recipe
@@ -35,8 +35,13 @@ function RecipeCard({ recipe, isLoggedIn } : Props) {
     } else {
       setItemState(State.SAVING)
       try {
-        await saveRecipe(recipe)
-        setItemState(State.IS_SAVED)
+        const res = await saveRecipe(recipe)
+        if(res && res.error) {
+          toast(res.error)
+          setItemState(State.ERROR)
+        } else {
+          setItemState(State.IS_SAVED)
+        }
       } catch (err) {
         console.error(err)
         setItemState(State.ERROR)

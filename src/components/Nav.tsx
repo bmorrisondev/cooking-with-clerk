@@ -37,7 +37,17 @@ function Nav() {
           { isAdmin && <Link href="/admin">Admin</Link>}
           { (isBetaUser || isAdmin) && <Link href="/app">App</Link>}
           { (isBetaUser || isAdmin) && <Link href="/app/me">Me</Link>}
-          <UserButton />
+          <UserButton userProfileProps={{
+            additionalOAuthScopes: {
+              google: [
+                "email",
+                "profile"
+              ],
+              github: [
+                "asdf"
+              ]
+            }
+          }} />
         </SignedIn>
         <SignedOut>
           <Link href="/sign-in">Sign in</Link>

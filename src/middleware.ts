@@ -1,5 +1,6 @@
 import { ClerkMiddlewareAuth, clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { Permit } from "permitio";
 
 const isProtectedRoute = createRouteMatcher([
   '/app(.*)',
@@ -12,23 +13,28 @@ type UserMetadata = {
   isAdmin?: boolean
 }
 
+const permit = new Permit({
+  // you'll have to set the PDP url to the PDP you've deployed in the previous step
+  // pdp: 'http://localhost:7766',
+  token: 'permit_key_2XezdY2BfKZj6vl87ZGXoomuXN6quDkCyouhwq3ZYgohLwQiTKqehbAxTvHJwx1SRcSatKZYK8TNf0X92oFw1f',
+})
+
 export default clerkMiddleware((auth, req) => {
+  const { userId, sessionClaims } = auth()
+
+
+
   if (isProtectedRoute(req)) {
     auth().protect()
 
-    // 👉 Use `auth()` to get the sessionClaims, which includes the public metadata
-    const { sessionClaims } = auth()
     const { isAdmin, isBetaUser } = sessionClaims?.metadata as UserMetadata
     if(isAdmin) {
-      // 👉 If the user is an admin, let them proceed to anything
       return
     }
     if(!isAdmin && req.nextUrl.pathname.startsWith('/admin')) {
-      // 👉 If the user is not an admin and they try to access the admin panel, return an error
       return NextResponse.error()
     }
     if(!isBetaUser) {
-      // 👉 If the user is not an admin and not a beta user, redirect them to the waitlist
       return NextResponse.redirect(new URL('/waitlist', req.url))
     }
   }

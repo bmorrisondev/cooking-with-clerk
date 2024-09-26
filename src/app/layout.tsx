@@ -4,7 +4,7 @@ import { Alegreya } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import Nav from "@/components/Nav";
-import { PHProvider } from "./providers";
+import PHProvider from "./PHProvider";
 import PostHogPageView from "./PostHogPageView";
 import { Toaster } from "@/components/ui/sonner";
 
@@ -33,8 +33,8 @@ export default function RootLayout({
               </div>
             </div>
           </body>
+          <Toaster />
         </PHProvider>
-        <Toaster />
       </html>
     </ClerkProvider>
   );
