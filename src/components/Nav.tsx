@@ -5,13 +5,15 @@ import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import clark from "@/assets/clark.png"
 import { useUser } from '@clerk/nextjs'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { Button } from './ui/button'
 
 function Nav() {
   const pathname = usePathname()
   const { user } = useUser()
   const [isAdmin, setIsAdmin] = useState(false)
   const [isBetaUser, setIsBetaUser] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
     if(user) {
@@ -50,8 +52,12 @@ function Nav() {
           }} />
         </SignedIn>
         <SignedOut>
-          <Link href="/sign-in">Sign in</Link>
-          <Link href="/sign-up">Sign up</Link>
+          <Button size="sm" className='rounded-full' onClick={() => router.push('/sign-in')}>
+            Sign in
+          </Button>
+          <Button size="sm" className="rounded-full" onClick={() => router.push('/sign-up')}>
+            Sign up
+          </Button>
         </SignedOut>
       </div>
     </div>
