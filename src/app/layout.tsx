@@ -9,6 +9,7 @@ import PostHogPageView from "./PostHogPageView";
 import { Toaster } from "@/components/ui/sonner";
 
 const alegreya = Alegreya({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin']})
 
 export const metadata: Metadata = {
   title: "Cooking with Clerk",
@@ -24,7 +25,7 @@ export default function RootLayout({
     <ClerkProvider signInFallbackRedirectUrl="/app" signUpFallbackRedirectUrl="/app">
       <html lang="en">
         <PHProvider>
-          <body className={alegreya.className}>
+          <body className={inter.className}>
             <PostHogPageView />
             <Nav />
             <div className="flex justify-center md:mx-0 m-2">
