@@ -22,11 +22,8 @@ export async function getDb(): Promise<NodePgDatabase<typeof schema>>{
 
 export async function saveRecipe(recipe: Recipe, ownerId: string) {
   const db = await getDb()
-  // await db.insert(recipes).values({
-  //   name: 'sdfksldf',
-  // })
-
   await db.insert(recipes).values({
+    // @ts-ignore TODO: why...
     owner_id: ownerId,
     name: recipe.name,
     description: recipe.description,
